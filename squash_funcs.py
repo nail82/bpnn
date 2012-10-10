@@ -16,3 +16,6 @@ def binary(x):
 
 def binary_prime(x):
     return np.exp(x) / (1 + np.exp(x)**2)
+
+def identity(x):
+    return x

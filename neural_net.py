@@ -4,7 +4,7 @@ interface to the neural network.
 """
 
 class NeuralNet:
-    def __init__(self, squash, squash_prime):
+    def __init__(self, dimensions, squash, squash_prime):
         self.sq = squash
         self.sqp = squash_prime
 
