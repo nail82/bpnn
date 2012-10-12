@@ -44,7 +44,19 @@
 \section{NOTES}
 - Starting work on the neural net.
 
-- Initial architecture ideas.  I think I'll just make it a fixed
-network until I can
+- Coming to the conclusion that a big part of neural network
+design is how to set up the data and get access to it.
+
+- My choice in this assignment was to restrict the problem to a
+three layer network, input, hidden and output, but to not
+otherwise restrict it.  That is, I wanted the ability to add
+an arbitray number of input, hidded and output nodes.  I also
+wanted the flexibility to swap out the squashing function.
+
+- The primary data structure for my network is in the DataTable
+class in the data_table module.  The DataTable class is the central
+element of my architecture.  Its primary purpose is to provide
+access to the data elements representing the network to clients
+which are primarily the nodes in the network.
 
 \end{document}
