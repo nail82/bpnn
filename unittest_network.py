@@ -1,8 +1,14 @@
+"""
+Unit tests for the network.
+"""
 from __future__ import print_function
 import sys
 import unittest
 import data_table as dt
 import numpy as np
+import z_node as zn
+import y_node as yn
+import squash_funcs as sf
 
 
 class DataTableTest(unittest.TestCase):
@@ -15,9 +21,6 @@ class DataTableTest(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-    def testPrettyprint(self):
-        self.t.prettyprint()
 
     def testSetInput(self):
         X = np.array((2.,3.))
@@ -66,13 +69,60 @@ class DataTableTest(unittest.TestCase):
         for i in range(1, self.hid_nd+1):
              self.assertEqual(i+1, z_deltas[i-1])
 
+    def testSetYdelta(self):
+        mytable = dt.DataTable((2,3,2))
+        mytable.set_y_delta(1, 1.)
+        mytable.set_y_delta(2, 2.)
+        y_deltas = mytable.get_y_deltas()
+        for i in range(1,3):
+            self.assertEqual(y_deltas[i-1], i)
+
+    def testSetZdelta(self):
+        mytable = dt.DataTable((2,3,2))
+        mytable.set_z_delta(1, 1.)
+        mytable.set_z_delta(2, 2.)
+        mytable.set_z_delta(3, 3.)
+        z_deltas = mytable.get_z_deltas()
+        for i in range(1,4):
+            self.assertEqual(z_deltas[i-1], i)
+
+
 
 class ZnodeTest(unittest.TestCase):
     def setUp(self):
-        pass
+        self.dt = dt.DataTable((2,3,2))
+        self.z_node = zn.Znode(1, sf.binary, sf.binary_prime, self.dt)
 
     def tearDown(self):
         pass
+
+    def testCalcOutput(self):
+        self.dt.set_input_vec(np.array((1.,2.)))
+        print("\nBEFORE:")
+        self.dt.prettyprint()
+        self.z_node.calc_output()
+        print("\nAFTER:")
+        self.dt.prettyprint()
+
+class YnodeTest(unittest.TestCase):
+    def setUp(self):
+        self.dt = dt.DataTable((2,3,2))
+        self.y_node = yn.Ynode(1, sf.binary, sf.binary_prime, self.dt)
+
+    def tearDown(self):
+        pass
+
+    def testCalcOutput(self):
+        self.dt.set_z_out(1, 1.)
+        self.dt.set_z_out(2, 2.)
+        self.dt.set_z_out(3, 3.)
+        print("\nBEFORE:")
+        self.dt.prettyprint()
+        self.y_node.calc_output()
+        print("\nAFTER:")
+        self.dt.prettyprint()
+
+
 
 def suite():
     suite = unittest.TestLoader().loadTestsFromTestCase(DataTableTest)
