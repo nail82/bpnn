@@ -58,11 +58,26 @@ class DataTableTest(unittest.TestCase):
 
     def testGetYdeltas(self):
         y_deltas = self.t.get_y_deltas()
-        for i in range(0,self.out_nd):
-            self.assertEqual(i, y_deltas[i])
+        for i in range(1, self.out_nd+1):
+            self.assertEqual(i-1, y_deltas[i-1])
+
+    def testGetZdeltas(self):
+        z_deltas = self.t.get_z_deltas()
+        for i in range(1, self.hid_nd+1):
+             self.assertEqual(i+1, z_deltas[i-1])
+
+
+class ZnodeTest(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
 
 def suite():
     suite = unittest.TestLoader().loadTestsFromTestCase(DataTableTest)
+    suite.addTests(
+        unittest.TestLoader().loadTestsFromTestCase(ZnodeTest))
     return suite
 
 if __name__ == '__main__':
