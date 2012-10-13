@@ -104,6 +104,14 @@ class DataTableTest(unittest.TestCase):
             tch = self.t.get_teacher(i)
             self.assertTrue(tch is None)
 
+    def testGetWforZdelta(self):
+        ldt = dt.DataTable((2,3,3))
+        ldt.set_test_weights()
+        for i in range(1,4):
+            w = ldt.get_w_for_z_delta(i)
+            print(i,"=>",w)
+            print()
+
 
 
 class ZnodeTest(unittest.TestCase):
@@ -121,6 +129,14 @@ class ZnodeTest(unittest.TestCase):
         self.assertAlmostEqual(0.9, self.dt.get_net_in_z(1))
         z_out = self.dt.get_z_out()
         self.assertAlmostEqual(.711, z_out[1], 3)
+
+    def testCalcDelta(self):
+        self.dt.set_net_in_z(1, .3)
+        self.dt.set_y_delta(1, 4.)
+        self.dt.set_y_delta(2, 5.)
+        self.z_node.calc_delta()
+        deltas = self.dt.get_z_deltas()
+        self.assertAlmostEqual(1.8176, deltas[0],4)
 
 class YnodeTest(unittest.TestCase):
     def setUp(self):

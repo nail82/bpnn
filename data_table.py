@@ -172,6 +172,13 @@ class DataTable(object):
         for i in range(0,self.deltas.shape[0]):
             self.deltas[i,0] = (i+1)/10.
 
+    def get_w_for_z_delta(self,z):
+        """Returns the hidden to output weights associated
+        with a delta z calculation."""
+        assert(0 < z <= self.hidden)
+        step = self.w_wts.shape[0] / self.output
+        return self.w_wts[z::step,0]
+
     def prettyprint(self):
         float_fmt = '{value:0.4f}'
         print()

@@ -39,3 +39,13 @@ class Znode(object):
         out = self.squash(net_in)
         self.dt.set_net_in_z(self.id, net_in)
         self.dt.set_z_out(self.id, out)
+
+    def calc_delta(self):
+        """
+        Calculate the delta for this node.  Assumes the upstream
+        output deltas have been calculated."""
+        w_wts = self.dt.get_w_for_z_delta(self.id)
+        y_deltas = self.dt.get_y_deltas()
+        net_in = self.dt.get_net_in_z(self.id)
+        delta = w_wts.T * y_deltas * self.squash_prime(net_in)
+        self.dt.set_z_delta(self.id, delta)
