@@ -14,9 +14,10 @@ import numpy as np
 def main():
     alpha = 0.5
     mynet = nn.NeuralNet((2,3,2), sf.binary, sf.binary_prime, alpha)
-    out = mynet.fwd(np.array((1,2)))
-    mynet.dt.prettyprint()
-
+    mynet.dt.set_test_weights()
+    myin = np.array((1.,2.))
+    myteach = np.array((2.,1.))
+    mynet.train(myin, myteach)
 
 
 if __name__ == '__main__':
