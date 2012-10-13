@@ -17,8 +17,9 @@ def main():
     mynet.dt.set_test_weights()
     myin = np.array((1.,2.))
     myteach = np.array((2.,1.))
-    mynet.train(myin, myteach)
+    error = mynet.train(myin, myteach, 1e-3)
     mynet.dt.prettyprint()
+    print("Error=>", error)
 
 if __name__ == '__main__':
     main()

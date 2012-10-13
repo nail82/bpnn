@@ -71,6 +71,24 @@ class DataTable(object):
         for i in range(0, self.input):
             self.input_vec[i+1,0] = X[i];
 
+    def get_v_vector(self):
+        """Return the entire input to hidden weight vector."""
+        return self.v_wts
+
+    def update_input_to_hidden(self, v_wts):
+        """Replace the input to hidden weights."""
+        assert(self.v_wts.shape == v_wts.shape)
+        self.v_wts = v_wts
+
+    def get_w_vector(self):
+        """Return the hiddent to output weight vector."""
+        return self.w_wts
+
+    def update_hidden_to_output(self, w_wts):
+        "Replace the hidden to output weights."""
+        assert(self.w_wts.shape == w_wts.shape)
+        self.w_wts = w_wts
+
     def get_input_to_hidden(self, z):
         """Returns the weights leading to a hidden node
         from all the input nodes."""

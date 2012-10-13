@@ -47,7 +47,7 @@ class NeuralNet(object):
                 yn.Ynode(i, squash, squash_prime, self.dt))
         self.alpha = alpha
 
-    def train(self, input_pattern, teacher):
+    def train(self, input_pattern, teacher, theta):
         """Presents a pattern to the network and runs
         a forward pass and then calculates deltas for
         the input and hidden nodes in the network.
@@ -60,18 +60,27 @@ class NeuralNet(object):
           teacher: A numpy vector that is the expected
               network output for the input pattern.
 
+          theta: If the network error is greater than theta, the
+              weigth updates are calculated and applied to the network.
+
         Return:
           The network error from the fwd pass
         """
-        self.fwd(input_pattern)
-        self.dt.set_teacher(teacher)
-        for y in self.ynodes:
-            y.calc_delta()
-        for z in self.znodes:
-            z.calc_delta()
-
-        delta_w_wts = self.calc_delta_w()
-        delta_v_wts = self.calc_delta_v()
+        output_vec = self.fwd(input_pattern)
+        error = np.linalg.norm(output_vec - teacher)
+        if (error > theta):
+            self.dt.set_teacher(teacher)
+            for y in self.ynodes:
+                y.calc_delta()
+            for z in self.znodes:
+                z.calc_delta()
+            delta_w_wts = self.calc_delta_w()
+            delta_v_wts = self.calc_delta_v()
+            w_update = self.dt.get_w_vector() + delta_w_wts
+            v_update = self.dt.get_v_vector() + delta_v_wts
+            self.dt.update_hidden_to_output(w_update)
+            self.dt.update_input_to_hidden(v_update)
+        return error
 
     def calc_delta_w(self):
         """Calculates the deltas for hidden to output weights.
