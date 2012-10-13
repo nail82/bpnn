@@ -158,11 +158,13 @@ class DataTable(object):
             self.deltas[i,0] = i/10.
 
     def prettyprint(self):
+        float_fmt = '{value:0.4f}'
         print()
         # Inputs
         msglines = []
         for i in range(0,self.input_vec.shape[0]):
-            msg = 'X{index} = {value}'.format(
+            fmt = ''.join(['X{index} = ',float_fmt])
+            msg = fmt.format(
                 index=i, value=self.input_vec[i,0])
             msglines.append(msg)
         print('\n'.join(msglines))
@@ -171,7 +173,8 @@ class DataTable(object):
         for i in range(1,self.hidden+1):
              v_vec = self.get_input_to_hidden(i)
              for j in range(0,self.hidden):
-                 msg = 'V{in_node}{hid} = {value}'.format(
+                 fmt = ''.join(['V{in_node}{hid} = ',float_fmt])
+                 msg = fmt.format(
                      in_node=j, hid=i, value=v_vec[j,0])
                  msglines.append(msg)
         print('\n'.join(msglines))
@@ -182,7 +185,8 @@ class DataTable(object):
         for i in range(1,self.output+1):
             w_vec = self.get_hidden_to_output(i)
             for j in range(0,self.hidden+1):
-                msg = 'W{hid}{out_node} = {value}'.format(
+                fmt = ''.join(['W{hid}{out_node} = ',float_fmt])
+                msg =  fmt.format(
                     hid=j, out_node=i, value=w_vec[j,0])
                 msglines.append(msg)
         print('\n'.join(msglines))
@@ -191,7 +195,8 @@ class DataTable(object):
         # net_in_z
         msglines = []
         for i in range(0,self.hidden):
-            msg = 'net_in_Z{hid} = {value}'.format(
+            fmt = ''.join(['net_in_Z{hid} = ', float_fmt])
+            msg = fmt.format(
                 hid=i+1, value=self.net_in_z[i,0])
             msglines.append(msg)
         print('\n'.join(msglines))
@@ -200,7 +205,8 @@ class DataTable(object):
         # z out
         msglines = []
         for i in range(0,self.hidden):
-            msg = 'z{hid} = {value}'.format(
+            fmt = ''.join(['z{hid} = ', float_fmt])
+            msg = fmt.format(
                 hid=i+1, value=self.z_out[i,0])
             msglines.append(msg)
         print('\n'.join(msglines))
@@ -209,7 +215,8 @@ class DataTable(object):
         # net_in_y
         msglines = []
         for i in range(0,self.output):
-            msg = 'net_in_Y{out} = {value}'.format(
+            fmt = ''.join(['net_in_Y{out} = ', float_fmt])
+            msg = fmt.format(
                 out=i+1, value=self.net_in_y[i,0])
             msglines.append(msg)
         print('\n'.join(msglines))
@@ -218,7 +225,8 @@ class DataTable(object):
         # y out
         msglines = []
         for i in range(0,self.output):
-            msg = 'y{out} = {value}'.format(
+            fmt = ''.join(['y{out} = ', float_fmt])
+            msg = fmt.format(
                 out=i+1, value=self.y_out[i,0])
             msglines.append(msg)
         print('\n'.join(msglines))
@@ -228,7 +236,8 @@ class DataTable(object):
         msglines = []
         y_deltas = self.get_y_deltas()
         for i in range(0,self.output):
-            msg = 'y{out}_delta = {value}'.format(
+            fmt = ''.join(['y{out}_delta = ',float_fmt])
+            msg = fmt.format(
                 out=i+1, value=y_deltas[i,0])
             msglines.append(msg)
         print('\n'.join(msglines))
@@ -238,7 +247,8 @@ class DataTable(object):
         msglines = []
         z_deltas = self.get_z_deltas()
         for i in range(0, self.hidden):
-            msg = 'z{out}_delta = {value}'.format(
+            fmt = ''.join(['z{out}_delta = ',float_fmt])
+            msg = fmt.format(
                 out=i+1, value=z_deltas[i,0])
             msglines.append(msg)
         print('\n'.join(msglines))
