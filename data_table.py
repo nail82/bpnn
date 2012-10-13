@@ -99,6 +99,11 @@ class DataTable(object):
         assert(0 < z <= self.hidden)
         self.net_in_z[z-1,0] = net_in
 
+    def get_z_out(self):
+        """Return the outputs of the hidden nodes
+        and the hidden bias."""
+        return self.z_out
+
     def set_z_out(self, z, out):
         """Set the output of a z node."""
         assert(0 < z <= self.hidden)
@@ -109,14 +114,36 @@ class DataTable(object):
         assert(0 < z <= self.out)
         return self.net_in_y[y-1, 0]
 
+    def set_net_in_y(self, y, net_in):
+        """Set the net input of a y node."""
+        assert(0 < y <= self.output)
+        self.net_in_y[y-1,0] = net_in
+
     def get_y_deltas(self):
         return self.deltas[0:self.output,0]
+
+    def set_y_delta(self, y, delta):
+        assert(0 < y <= self.output)
+        self.deltas[y-1,0] = delta
 
     def get_z_deltas(self):
         return self.deltas[self.output:,0]
 
+    def set_z_delta(self, z, delta):
+        assert(0 < z <= self.hidden)
+        index = self.output + z - 1
+        self.deltas[index,0] = delta
+
     def get_teach(self):
         return self.teach
+
+    def get_output(self):
+        return self.y_out
+
+    def set_y_out(self, y, out):
+        """Set the output of an output node."""
+        assert(0 < y <= self.hidden)
+        self.y_out[y-1,0] = out
 
     def set_test_weights(self):
         """Set the weight vectors and deltas to deterministic
