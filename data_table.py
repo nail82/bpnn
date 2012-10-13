@@ -40,7 +40,6 @@ class DataTable(object):
         net_in_y_shape  = (self.output, 1)
         y_out_shape     = (self.output, 1)
         deltas_shape    = (self.hidden+self.output, 1)
-        teach_shape     = (self.output, 1)
 
         b = -0.5
         a = 0.5
@@ -55,11 +54,15 @@ class DataTable(object):
         self.net_in_y  = np.asmatrix(np.zeros(net_in_y_shape))
         self.y_out     = np.asmatrix(np.zeros(y_out_shape))
         self.deltas    = np.asmatrix(np.zeros(deltas_shape))
-        self.teach     = np.asmatrix(np.zeros(teach_shape))
+        self.teacher   = [None for x in range(0,self.output)]
 
         # Initialize the bias units
         self.input_vec[0,0] = 1.
         self.z_out[0,0] = 1.
+
+    def get_input_vec(self):
+        """Returns the input vector."""
+        return self.input_vec
 
     def set_input_vec(self,X):
         """Place an input vector on the input nodes of
@@ -67,10 +70,6 @@ class DataTable(object):
         assert(len(X) == self.input)
         for i in range(0, self.input):
             self.input_vec[i+1,0] = X[i];
-
-    def get_input_vec(self):
-        """Returns the input vector."""
-        return self.input_vec
 
     def get_input_to_hidden(self, z):
         """Returns the weights leading to a hidden node
@@ -107,11 +106,11 @@ class DataTable(object):
     def set_z_out(self, z, out):
         """Set the output of a z node."""
         assert(0 < z <= self.hidden)
-        self.z_out[z-1,0] = out
+        self.z_out[z,0] = out
 
     def get_net_in_y(self, y):
         """Returns the net input to a y node."""
-        assert(0 < z <= self.out)
+        assert(0 < y <= self.output)
         return self.net_in_y[y-1, 0]
 
     def set_net_in_y(self, y, net_in):
@@ -134,28 +133,44 @@ class DataTable(object):
         index = self.output + z - 1
         self.deltas[index,0] = delta
 
-    def get_teach(self):
-        return self.teach
+    def get_teacher(self, y):
+        """Get the teacher value for y node."""
+        assert(0 < y <= self.output)
+        v = self.teacher[y-1]
+        # Set this teacher to None in prep for the next round
+        self.teacher[y-1] = None
+        return v
 
     def get_output(self):
         return self.y_out
+
+    def get_y_out(self, y):
+        """Return the output for a particular y node."""
+        assert(0 < y <= self.hidden)
+        return self.y_out[y-1,0]
 
     def set_y_out(self, y, out):
         """Set the output of an output node."""
         assert(0 < y <= self.hidden)
         self.y_out[y-1,0] = out
 
+    def set_teacher(self, t):
+        assert(len(t) == len(self.teacher))
+        for i in range(len(t)):
+            self.teacher[i] = t[i]
+
+
     def set_test_weights(self):
         """Set the weight vectors and deltas to deterministic
         values for testing access functions"""
         for i in range(0,self.v_wts.shape[0]):
-            self.v_wts[i,0] = i/10.
+            self.v_wts[i,0] = (i+1)/10.
 
         for i in range(0,self.w_wts.shape[0]):
-            self.w_wts[i,0] = i/10.
+            self.w_wts[i,0] = (i+1)/10.
 
         for i in range(0,self.deltas.shape[0]):
-            self.deltas[i,0] = i/10.
+            self.deltas[i,0] = (i+1)/10.
 
     def prettyprint(self):
         float_fmt = '{value:0.4f}'
@@ -204,10 +219,10 @@ class DataTable(object):
 
         # z out
         msglines = []
-        for i in range(0,self.hidden):
+        for i in range(0,self.hidden+1):
             fmt = ''.join(['z{hid} = ', float_fmt])
             msg = fmt.format(
-                hid=i+1, value=self.z_out[i,0])
+                hid=i, value=self.z_out[i,0])
             msglines.append(msg)
         print('\n'.join(msglines))
         print()
