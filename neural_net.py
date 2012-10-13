@@ -61,7 +61,7 @@ class NeuralNet(object):
               network output for the input pattern.
 
         Return:
-          The error of
+          The network error from the fwd pass
         """
         self.fwd(input_pattern)
         self.dt.set_teacher(teacher)
@@ -72,8 +72,6 @@ class NeuralNet(object):
 
         delta_w_wts = self.calc_delta_w()
         delta_v_wts = self.calc_delta_v()
-        print("delta w=>\n", delta_w_wts)
-        print("delta v=>\n", delta_v_wts)
 
     def calc_delta_w(self):
         """Calculates the deltas for hidden to output weights.

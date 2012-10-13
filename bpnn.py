@@ -18,7 +18,7 @@ def main():
     myin = np.array((1.,2.))
     myteach = np.array((2.,1.))
     mynet.train(myin, myteach)
-
+    mynet.dt.prettyprint()
 
 if __name__ == '__main__':
     main()
