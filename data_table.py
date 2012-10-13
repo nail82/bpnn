@@ -61,81 +61,6 @@ class DataTable(object):
         self.input_vec[0,0] = 1.
         self.z_out[0,0] = 1.
 
-    def prettyprint(self):
-        print()
-        msglines = []
-        for i in range(0,self.input_vec.shape[0]):
-            msg = 'X{index} = {value}'.format(
-                index=i, value=self.input_vec[i,0])
-            msglines.append(msg)
-        print('\n'.join(msglines))
-        print()
-        msglines = []
-        for i in range(1,self.hidden+1):
-             v_vec = self.get_input_to_hidden(i)
-             for j in range(0,self.hidden):
-                 msg = 'V{in_node}{hid} = {value}'.format(
-                     in_node=j, hid=i, value=v_vec[j,0])
-                 msglines.append(msg)
-        print('\n'.join(msglines))
-        print()
-
-        msglines = []
-        for i in range(1,self.output+1):
-            w_vec = self.get_hidden_to_output(i)
-            for j in range(0,self.hidden+1):
-                msg = 'W{hid}{out_node} = {value}'.format(
-                    hid=j, out_node=i, value=w_vec[j,0])
-                msglines.append(msg)
-        print('\n'.join(msglines))
-        print()
-
-        msglines = []
-        for i in range(0,self.hidden):
-            msg = 'net_in_Z{hid} = {value}'.format(
-                hid=i+1, value=self.net_in_z[i,0])
-            msglines.append(msg)
-        print('\n'.join(msglines))
-        print()
-
-        msglines = []
-        for i in range(0,self.hidden):
-            msg = 'z{hid} = {value}'.format(
-                hid=i+1, value=self.z_out[i,0])
-            msglines.append(msg)
-        print('\n'.join(msglines))
-        print()
-
-        msglines = []
-        for i in range(0,self.output):
-            msg = 'net_in_Y{out} = {value}'.format(
-                out=i+1, value=self.net_in_y[i,0])
-            msglines.append(msg)
-        print('\n'.join(msglines))
-        print()
-
-        msglines = []
-        for i in range(0,self.output):
-            msg = 'y{out} = {value}'.format(
-                out=i+1, value=self.y_out[i,0])
-            msglines.append(msg)
-        print('\n'.join(msglines))
-        print()
-
-        msglines = []
-        y_deltas = self.get_y_deltas()
-        for i in range(0,self.output):
-            msg = 'y{out}_delta = {value}'.format(
-                out=i+1, value=y_deltas[i])
-            msglines.append(msg)
-        print('\n'.join(msglines))
-        print()
-
-        msglines = []
-        z_deltas = self.get_z_deltas()
-
-        # print("Teachers :", self.teach.T)
-
     def set_input_vec(self,X):
         """Place an input vector on the input nodes of
         the network."""
@@ -166,17 +91,32 @@ class DataTable(object):
 
     def get_net_in_z(self, z):
         """Returns the net input to a z node."""
-        pass
+        assert(0 < z <= self.hidden)
+        return self.net_in_z[z-1, 0]
+
+    def set_net_in_z(self, z, net_in):
+        """Set the net input of a z node."""
+        assert(0 < z <= self.hidden)
+        self.net_in_z[z-1,0] = net_in
+
+    def set_z_out(self, z, out):
+        """Set the output of a z node."""
+        assert(0 < z <= self.hidden)
+        self.z_out[z-1,0] = out
 
     def get_net_in_y(self, y):
         """Returns the net input to a y node."""
-        pass
+        assert(0 < z <= self.out)
+        return self.net_in_y[y-1, 0]
 
     def get_y_deltas(self):
         return self.deltas[0:self.output,0]
 
     def get_z_deltas(self):
         return self.deltas[self.output:,0]
+
+    def get_teach(self):
+        return self.teach
 
     def set_test_weights(self):
         """Set the weight vectors and deltas to deterministic
@@ -189,3 +129,90 @@ class DataTable(object):
 
         for i in range(0,self.deltas.shape[0]):
             self.deltas[i,0] = i
+
+    def prettyprint(self):
+        print()
+        # Inputs
+        msglines = []
+        for i in range(0,self.input_vec.shape[0]):
+            msg = 'X{index} = {value}'.format(
+                index=i, value=self.input_vec[i,0])
+            msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
+        msglines = []
+        for i in range(1,self.hidden+1):
+             v_vec = self.get_input_to_hidden(i)
+             for j in range(0,self.hidden):
+                 msg = 'V{in_node}{hid} = {value}'.format(
+                     in_node=j, hid=i, value=v_vec[j,0])
+                 msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
+
+        # Hidden to output
+        msglines = []
+        for i in range(1,self.output+1):
+            w_vec = self.get_hidden_to_output(i)
+            for j in range(0,self.hidden+1):
+                msg = 'W{hid}{out_node} = {value}'.format(
+                    hid=j, out_node=i, value=w_vec[j,0])
+                msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
+
+        # net_in_z
+        msglines = []
+        for i in range(0,self.hidden):
+            msg = 'net_in_Z{hid} = {value}'.format(
+                hid=i+1, value=self.net_in_z[i,0])
+            msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
+
+        # z out
+        msglines = []
+        for i in range(0,self.hidden):
+            msg = 'z{hid} = {value}'.format(
+                hid=i+1, value=self.z_out[i,0])
+            msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
+
+        # net_in_y
+        msglines = []
+        for i in range(0,self.output):
+            msg = 'net_in_Y{out} = {value}'.format(
+                out=i+1, value=self.net_in_y[i,0])
+            msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
+
+        # y out
+        msglines = []
+        for i in range(0,self.output):
+            msg = 'y{out} = {value}'.format(
+                out=i+1, value=self.y_out[i,0])
+            msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
+
+        # output node deltas
+        msglines = []
+        y_deltas = self.get_y_deltas()
+        for i in range(0,self.output):
+            msg = 'y{out}_delta = {value}'.format(
+                out=i+1, value=y_deltas[i,0])
+            msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
+
+        # hidden node deltas
+        msglines = []
+        z_deltas = self.get_z_deltas()
+        for i in range(0, self.hidden):
+            msg = 'z{out}_delta = {value}'.format(
+                out=i+1, value=z_deltas[i,0])
+            msglines.append(msg)
+        print('\n'.join(msglines))
+        print()
