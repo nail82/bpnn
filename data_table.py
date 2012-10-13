@@ -149,13 +149,13 @@ class DataTable(object):
         """Set the weight vectors and deltas to deterministic
         values for testing access functions"""
         for i in range(0,self.v_wts.shape[0]):
-            self.v_wts[i,0] = i
+            self.v_wts[i,0] = i/10.
 
         for i in range(0,self.w_wts.shape[0]):
-            self.w_wts[i,0] = i
+            self.w_wts[i,0] = i/10.
 
         for i in range(0,self.deltas.shape[0]):
-            self.deltas[i,0] = i
+            self.deltas[i,0] = i/10.
 
     def prettyprint(self):
         print()
