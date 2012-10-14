@@ -27,9 +27,9 @@ def main():
             d[0,0] = -1
 
     alpha = 0.5
-    theta = .0001
-    iter_limit = 250000
-    mynet = nn.NeuralNet((2,2,1), sf.bipolar, sf.bipolar_prime, alpha)
+    theta = .0009
+    iter_limit = 500000
+    mynet = nn.NeuralNet((2,3,1), sf.bipolar, sf.bipolar_prime, alpha)
     n = training_data.shape[0]
     total_count = 0
     k = -1
