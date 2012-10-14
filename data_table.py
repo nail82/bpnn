@@ -100,9 +100,10 @@ class DataTable(object):
     def set_input_vec(self,X):
         """Place an input vector on the input nodes of
         the network."""
-        assert(len(X) == self.input)
+        vec = np.asarray(X).squeeze()
+        assert(len(vec) == self.input)
         for i in range(0, self.input):
-            self.input_vec[i+1,0] = X[i];
+            self.input_vec[i+1,0] = vec[i]
 
     def get_v_vector(self):
         """Return the entire input to hidden weight vector."""
