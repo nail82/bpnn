@@ -94,8 +94,8 @@ class DataTable(object):
         from all the input nodes."""
         assert(0 < z <= self.hidden)
         z = z-1
-        start = (self.hidden)*z
-        stop  = start+self.hidden
+        start = (self.input+1)*z
+        stop  = start+self.input+1
         return self.v_wts[start:stop,0]
 
     def get_hidden_to_output(self, y):
@@ -209,10 +209,12 @@ class DataTable(object):
             msglines.append(msg)
         print('\n'.join(msglines))
         print()
+
+        # Input to hidden
         msglines = []
         for i in range(1,self.hidden+1):
              v_vec = self.get_input_to_hidden(i)
-             for j in range(0,self.hidden):
+             for j in range(0,self.input+1):
                  fmt = ''.join(['V{in_node}{hid} = ',float_fmt])
                  msg = fmt.format(
                      in_node=j, hid=i, value=v_vec[j,0])

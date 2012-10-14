@@ -22,6 +22,12 @@ class DataTableTest(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def testAAinputToHidden(self):
+        t = dt.DataTable((2,2,1))
+        v = t.get_input_to_hidden(1)
+        t = dt.DataTable((2,3,2))
+        v = t.get_input_to_hidden(1)
+
     def testSetInput(self):
         X = np.array((2.,3.))
         self.t.set_input_vec(X)
@@ -46,6 +52,11 @@ class DataTableTest(unittest.TestCase):
         for i in range(0,3):
             self.assertAlmostEqual(start, v_vec[i])
             start += .1
+
+    def testGetInputToHidden2(self):
+        t = dt.DataTable((2,2,1))
+        v_wts = t.get_input_to_hidden(1)
+        self.assertEqual(v_wts.shape, (3,1))
 
     def testGetHiddenToOutput(self):
         w_vec = self.t.get_hidden_to_output(1)
