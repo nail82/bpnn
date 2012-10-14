@@ -24,13 +24,13 @@ def main():
         total_count += 1
         k = (k+1) % n
         pattern = np.asarray(data[k,1:]).squeeze()
-        teacher = np.asarray(data[k,0]).squeeze()
+        teacher = [data[k,0]]
         error = mynet.train(pattern, teacher, theta)
         print('Error=>', error)
         if (total_count > iter_limit) or (error < theta):
             break
 
-    mynet.prettyprint()
+    return mynet
 
 
 if __name__ == '__main__':
