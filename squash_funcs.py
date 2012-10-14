@@ -19,3 +19,10 @@ def binary_prime(x):
 
 def identity(x):
     return x
+
+def linear_thresh(x):
+    if x >= 0:
+        return 1
+    else:
+        return -1
+
