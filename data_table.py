@@ -11,6 +11,7 @@ This module implements the data table for the neural net.
 """
 from __future__ import print_function
 import numpy as np
+import os
 
 class DataTable(object):
     """
@@ -41,7 +42,7 @@ class DataTable(object):
         y_out_shape     = (self.output, 1)
         deltas_shape    = (self.hidden+self.output, 1)
 
-        b = -0.5
+        b = 0.1
         a = 0.5
         init_v_wts = (b-a) * np.random.random_sample(v_wts_shape[0])
         init_w_wts = (b-a) * np.random.random_sample(w_wts_shape[0])
@@ -59,6 +60,38 @@ class DataTable(object):
         # Initialize the bias units
         self.input_vec[0,0] = 1.
         self.z_out[0,0] = 1.
+
+    def tofile(self, filename):
+        """Save the network configuration and weight to a file."""
+        fh = open(filename, "w")
+        fh.write('|'.join([str(self.input), str(self.hidden), str(self.output)]))
+        fh.write("\n")
+        self.v_wts.tofile(fh, sep=" ", format="%0.8f")
+        fh.write("\n")
+        self.w_wts.tofile(fh, sep=" ", format="%0.8f")
+        fh.write("\n")
+        fh.close()
+
+    def fromfile(self, filename):
+        """Reconstitutes a data table from a file on disc."""
+        if not os.path.exists(filename):
+            print("Unable to locate", filename)
+            return
+        else:
+            # Read the data from the file
+            fh = open(filename,"r")
+            config = fh.readline().strip()
+            v_wt_str = fh.readline().strip()
+            w_wt_str = fh.readline().strip()
+            fh.close()
+
+            # Reinitialize with the data from the file.
+            config = [int(c) for c in config.split('|')]
+            self.__init__(config)
+            self.v_wts = np.matrix(v_wt_str).T
+            self.w_wts = np.matrix(w_wt_str).T
+
+
 
     def get_input_vec(self):
         """Returns the input vector."""
@@ -295,3 +328,4 @@ class DataTable(object):
             msglines.append(msg)
         print('\n'.join(msglines))
         print()
+
