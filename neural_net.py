@@ -22,7 +22,7 @@ class NeuralNet(object):
     """
 
     def __init__(self, dimensions, squash, squash_prime,
-                 alpha):
+                 alpha, data_table=None):
         """Initialize the nodes of the network.
         Args:
         dimensions: A tuple, input hidden and output node counts.
@@ -30,10 +30,18 @@ class NeuralNet(object):
         squash_prime: First derivative of the squashing func.
         alpha: The network learning rate.
         """
-        self.dt = dt.DataTable(dimensions)
-        self.input = dimensions[0]
-        self.hidden = dimensions[1]
-        self.output = dimensions[2]
+        self.dt = None
+        if data_table is not None:
+            self.dt = data_table
+        else:
+            self.dt = dt.DataTable(dimensions)
+            self.input = dimensions[0]
+            self.hidden = dimensions[1]
+            self.output = dimensions[2]
+        self.input  = self.dt.input
+        self.hidden = self.dt.hidden
+        self.output = self.dt.output
+
         self.f = squash
         self.fp = squash_prime
         self.alpha = alpha
