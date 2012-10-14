@@ -41,7 +41,20 @@
 \begin{document}
 \maketitle
 
-\section{NOTES}
+\section*{Introduction}
+
+\section*{XOR Problem}
+- Set the problem up with the same values in the text.
+- Iteration limit of 1000 wouldn't converge, in fact, I didn't think
+it was converging.  Increased the limit and plotted the error and
+noticed that on some runs it was trending to a convergence.
+
+- Turned off the iteration limit and allowed to run until error was
+$\lt 0.01$.  It took 80705 iterations and from plot, error is slowly
+descreasing.  Clear from the result that an arbitrary error level can
+be reached if you want to wait long enough.
+
+\section*{NOTES}
 - Starting work on the neural net.
 
 - Coming to the conclusion that a big part of neural network
@@ -74,6 +87,7 @@ hidden and output nodes.
   retrieving data
 
 - nodes are objects (but this should change.
+
 
 
 \end{document}
