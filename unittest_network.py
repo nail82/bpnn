@@ -9,6 +9,7 @@ import numpy as np
 import z_node as zn
 import y_node as yn
 import squash_funcs as sf
+import neural_net as nn
 
 
 class DataTableTest(unittest.TestCase):
@@ -177,6 +178,19 @@ class YnodeTest(unittest.TestCase):
         deltas = self.dt.get_y_deltas()
         self.assertAlmostEqual(0.0132, deltas[0], 3)
 
+class NeuralNetTest(unittest.TestCase):
+    def setUp(self):
+        self.net = nn.NeuralNet((2,2,1), sf.linear_thresh, sf.identity, 0.1)
+        self.net.dt.fromfile("book_xor.txt")
+
+    def tearDown(self):
+        pass
+
+    def testFwd(self):
+        i = np.array((1., 1,))
+        t = [-1]
+        self.net.fwd(i)
+
 
 
 def suite():
@@ -185,6 +199,8 @@ def suite():
         unittest.TestLoader().loadTestsFromTestCase(ZnodeTest))
     suite.addTests(
         unittest.TestLoader().loadTestsFromTestCase(YnodeTest))
+    suite.addTests(
+        unittest.TestLoader().loadTestsFromTestCase(NeuralNetTest))
     return suite
 
 if __name__ == '__main__':
