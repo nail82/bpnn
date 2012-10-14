@@ -34,17 +34,8 @@ class NeuralNet(object):
         self.input = dimensions[0]
         self.hidden = dimensions[1]
         self.output = dimensions[2]
-        self.sq = squash
-        self.sqp = squash_prime
-        self.znodes = []
-        self.ynodes = []
-        for i in range(1,self.hidden+1):
-            self.znodes.append(
-                zn.Znode(i, squash, squash_prime, self.dt))
-
-        for i in range(1,self.output+1):
-            self.ynodes.append(
-                yn.Ynode(i, squash, squash_prime, self.dt))
+        self.f = squash
+        self.fp = squash_prime
         self.alpha = alpha
 
     def train(self, input_pattern, teacher, theta):
@@ -70,10 +61,12 @@ class NeuralNet(object):
         error = np.linalg.norm(output_vec - teacher)
         if (error > theta):
             self.dt.set_teacher(teacher)
-            for y in self.ynodes:
-                y.calc_delta()
-            for z in self.znodes:
-                z.calc_delta()
+            for y in range(1,self.output+1):
+                delta = yn.calc_delta(y, self.dt, self.fp)
+                self.dt.set_y_delta(y, delta)
+            for z in range(1,self.hidden+1):
+                delta = zn.calc_delta(z, self.dt, self.fp)
+                self.dt.set_z_delta(z, delta)
             delta_w_wts = self.calc_delta_w()
             delta_v_wts = self.calc_delta_v()
             w_update = self.dt.get_w_vector() + delta_w_wts
@@ -116,10 +109,14 @@ class NeuralNet(object):
         """
         self.dt.set_input_vec(input_pattern)
 
-        for z in self.znodes:
-            z.calc_output()
+        for z in range(1,self.hidden+1):
+            (net_in, z_out) = zn.calc_output(z, self.dt, self.f)
+            self.dt.set_net_in_z(z, net_in)
+            self.dt.set_z_out(z, z_out)
 
-        for y in self.ynodes:
-            y.calc_output()
+        for y in range(1,self.output+1):
+            (net_in, y_out) = yn.calc_output(y, self.dt, self.f)
+            self.dt.set_net_in_y(y, net_in)
+            self.dt.set_y_out(y, y_out)
 
         return self.dt.get_output()

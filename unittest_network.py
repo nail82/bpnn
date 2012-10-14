@@ -130,31 +130,27 @@ class ZnodeTest(unittest.TestCase):
     def setUp(self):
         self.dt = dt.DataTable((2,3,2))
         self.dt.set_test_weights()
-        self.z_node = zn.Znode(1, sf.binary, sf.binary_prime, self.dt)
 
     def tearDown(self):
         pass
 
     def testCalcOutput(self):
         self.dt.set_input_vec(np.array((1.,2.)))
-        self.z_node.calc_output()
-        self.assertAlmostEqual(0.9, self.dt.get_net_in_z(1))
-        z_out = self.dt.get_z_out()
-        self.assertAlmostEqual(.711, z_out[1], 3)
+        (net_in, z_out) = zn.calc_output(1, self.dt, sf.binary)
+        self.assertAlmostEqual(0.9, net_in, 3)
+        self.assertAlmostEqual(.711, z_out, 3)
 
     def testCalcDelta(self):
         self.dt.set_net_in_z(1, .3)
         self.dt.set_y_delta(1, 4.)
         self.dt.set_y_delta(2, 5.)
-        self.z_node.calc_delta()
-        deltas = self.dt.get_z_deltas()
-        self.assertAlmostEqual(1.8176, deltas[0],4)
+        delta = zn.calc_delta(1, self.dt, sf.binary_prime)
+        self.assertAlmostEqual(1.8176, delta,4)
 
 class YnodeTest(unittest.TestCase):
     def setUp(self):
         self.dt = dt.DataTable((2,3,2))
         self.dt.set_test_weights()
-        self.y_node = yn.Ynode(1, sf.binary, sf.binary_prime, self.dt)
 
     def tearDown(self):
         pass
@@ -163,20 +159,21 @@ class YnodeTest(unittest.TestCase):
         self.dt.set_z_out(1, 1.)
         self.dt.set_z_out(2, 2.)
         self.dt.set_z_out(3, 3.)
-        self.y_node.calc_output()
-        self.assertAlmostEqual(2.1, self.dt.get_net_in_y(1), 3)
-        self.assertAlmostEqual(0.8909, self.dt.get_y_out(1), 4)
+        (net_in, y_out) = yn.calc_output(1, self.dt, sf.binary)
+        self.assertAlmostEqual(2.1, net_in, 3)
+        self.assertAlmostEqual(0.8909, y_out, 4)
 
     def testCalcDelta(self):
         self.dt.set_z_out(1, 1.)
         self.dt.set_z_out(2, 2.)
         self.dt.set_z_out(3, 3.)
-        self.y_node.calc_output()
-        self.assertAlmostEqual(0.8909, self.dt.get_y_out(1), 3)
+        (net_in, y_out) = yn.calc_output(1, self.dt, sf.binary)
+        self.assertAlmostEqual(0.8909, y_out, 4)
+        self.dt.set_net_in_y(1, net_in)
+        self.dt.set_y_out(1, y_out)
         self.dt.set_teacher(np.array((1,2)))
-        self.y_node.calc_delta()
-        deltas = self.dt.get_y_deltas()
-        self.assertAlmostEqual(0.0132, deltas[0], 3)
+        delta = yn.calc_delta(1, self.dt, sf.binary_prime)
+        self.assertAlmostEqual(0.0132, delta, 3)
 
 class NeuralNetTest(unittest.TestCase):
     def setUp(self):

@@ -10,42 +10,23 @@ File: z_node.py
 This file implements a hidden node.
 """
 
-class Znode(object):
-    """This class models a hidden node in a neural network."""
 
-    def __init__(self, node_id, squash, squash_prime, dt):
-        """
-        Initialize the node.
-        Args:
-        id: The identifier of the node. The value should be
-        1 <= id <= number of hidden nodes
-        squash: The squashing function
-        squash_prime: First derivative of the squashing function
-        dt: The network data table.
-        """
-        self.id = node_id
-        self.squash = squash
-        self.squash_prime = squash_prime
-        self.dt = dt
+def calc_output(node_id, data_table, f):
+    """
+    Calculates net in, output for this node and returns both as a tuple.
+    """
+    input_vec = data_table.get_input_vec()
+    v_wts = data_table.get_input_to_hidden(node_id)
+    net_in = input_vec.T * v_wts
+    out = f(net_in)
+    return (net_in, out)
 
-    def calc_output(self):
-        """
-        Calculate this node's output and store the result
-        in the data table.
-        """
-        input_vec = self.dt.get_input_vec()
-        v_wts = self.dt.get_input_to_hidden(self.id)
-        net_in = input_vec.T * v_wts
-        out = self.squash(net_in)
-        self.dt.set_net_in_z(self.id, net_in)
-        self.dt.set_z_out(self.id, out)
-
-    def calc_delta(self):
-        """
-        Calculate the delta for this node.  Assumes the upstream
-        output deltas have been calculated."""
-        w_wts = self.dt.get_w_for_z_delta(self.id)
-        y_deltas = self.dt.get_y_deltas()
-        net_in = self.dt.get_net_in_z(self.id)
-        delta = w_wts.T * y_deltas * self.squash_prime(net_in)
-        self.dt.set_z_delta(self.id, delta)
+def calc_delta(node_id, data_table, fp):
+    """
+    Calculate the delta for this node.  Assumes the upstream
+    output deltas have been calculated."""
+    w_wts = data_table.get_w_for_z_delta(node_id)
+    y_deltas = data_table.get_y_deltas()
+    net_in = data_table.get_net_in_z(node_id)
+    delta = w_wts.T * y_deltas * fp(net_in)
+    return delta
