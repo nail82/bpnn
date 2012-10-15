@@ -18,7 +18,7 @@
 % Homework Specific Information
 \newcommand{\hmwkTitle}{Assignment 3}
 \newcommand{\hmwkSubTitle}{}
-\newcommand{\hmwkDueDate}{12 October 2012}
+\newcommand{\hmwkDueDate}{15 October 2012}
 \newcommand{\hmwkClass}{CS 640}
 \newcommand{\hmwkClassTime}{2:20}
 \newcommand{\hmwkClassInstructor}{Dr Ranganath}
@@ -42,51 +42,125 @@
 \maketitle
 
 \section*{Introduction}
+The purpose of this assignment was to construct and train a back
+propagation neural network and to exercise the network on two distinct
+data sets.  The first data set is the XOR data set and the second is
+the quadratically separable data from assignment two.
+
+\section*{Neural Network Architecture}
+I had several goals in mind as I developed the architecture for my
+neural network.  First I wanted to keep it as simple as I could manage
+to permit detailed analysis and testing of each component.  Second, I
+wanted to preserve flexibility by parameterizing key features of the
+network.  The path I chose toward these goals was to restrict the
+network to a three layer network, but allow an arbitrary number of
+input, hidden and output nodes to be specified during network
+construction. The squashing function and its derivative are selected
+at construction as well.
+
+There are two main classes in my architecture, DataTable and
+NeuralNet. DataTable is the central repository for network weights and
+intermediate and final calculations.  The class methods for this class
+only provide access to the data stored in the table. There are no data
+manipulation members in this class.
+
+NeuralNet is the interface class to the network.  It provides two
+public methods to access the network.  One is fwd(), which presents an
+input pattern to the network and executes the forward pass through the
+network. The other public method is train().  This method runs a
+forward and backward pass on the network to update the network
+weights.
+
+The are three additional modules consisting of free functions that
+peform calculations on network data.  The hidden and output nodes are
+not modeled directly.  The calculations performed by these nodes are
+encapsulated in the z\_node and y\_node modules as free functions.
+Squashing functions are implemented in a separate module as well,
+squash\_funcs.py.  Lastly are the executables that perform the training
+and analysis called for in the assignment, nn\_xor.py and nn\_quad.py.  Thes executables utilize the interface provided by DataTable and NeuralNet to train the network and analyze results.
+
+Next, I will discuss each exercise.
 
 \section*{XOR Problem}
-- Set the problem up with the same values in the text.
-- Iteration limit of 1000 wouldn't converge, in fact, I didn't think
-it was converging.  Increased the limit and plotted the error and
-noticed that on some runs it was trending to a convergence.
+The XOR problem called for training the network to perform XOR logic
+on a two dimensional input vector.  I trained the network using only
+the four patterns in the XOR truth table and observed several interesting properties related to training.
 
-- Turned off the iteration limit and allowed to run until error was
-$\lt 0.01$.  It took 80705 iterations and from plot, error is slowly
-descreasing.  Clear from the result that an arbitrary error level can
-be reached if you want to wait long enough.
+I initially capped training iterations to 1000 iterations and it
+appeared the network was not converging.  A plot of iteration against
+error of this situation is in Figure~\ref{fig:xor-pre}.  I then
+increased the iteration limit and modified the logic to produce a plot
+after each training session.  After several incremental changes to the
+iteration limit, the error plot began to look like th plot in
+Figure~\ref{fig:xor-converging}.  This plot suggested to me that the
+network was converging.  I increased the iteration limit further and
+the network did converge as shown in Figure~\ref{fig:xor-converged}.
+
+The pattern of convergence has a consistent pattern.  The error will
+oscillate for several thousan iterations until a break point is
+reached. After that point, the error falls off rapidly. It appears
+that an arbitrarily small error can be achieved given enough time.
+
+After training, applying inputs to the network resulted in the output
+values listed in Table~\ref{table:xor-out} and the XOR decision boundary is plotted in Figure~\ref{fig:xor-boundary}.  The dark areas in the boundary plot map to 1.
+
+\begin{table}
+  \begin{center}
+    \caption{XOR Trained Network Output}
+    \begin{tabular}[c]{ c  c | c }
+      $ x_1$  & $x_2$ & Output \\
+      \hline
+      1 & 1 & 0.0170 \\
+      0 & 0 & 0.0135 \\
+      1 & 0 & 0.9860 \\
+      0 & 1 & 0.9861 \\
+      \label{table:xor-out}
+    \end{tabular}
+  \end{center}
+\end{table}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{images/preconverge_xor.eps}
+  \caption{Pre-converged XOR}
+  \label{fig:xor-pre}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{images/convergent_xor.eps}
+  \caption{Converging XOR}
+  \label{fig:xor-converging}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{images/xor_converged.eps}
+  \caption{Converged XOR}
+  \label{fig:xor-converged}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{images/xor_boundary.eps}
+  \caption{XOR Decsion Boundary}
+  \label{fig:xor-boundary}
+\end{figure}
+
+\section*{Assignment 2 Data}
+
+\section*{Observations and Summary}
+
 
 \section*{NOTES}
-- Starting work on the neural net.
 
-- Coming to the conclusion that a big part of neural network
-design is how to set up the data and get access to it.
-
-- My choice in this assignment was to restrict the problem to a
-three layer network, input, hidden and output, but to not
-otherwise restrict it.  That is, I wanted the ability to add
-an arbitray number of input, hidded and output nodes.  I also
-wanted the flexibility to swap out the squashing function.
-
-- The primary data structure for my network is in the DataTable
-class in the data_table module.  The DataTable class is the central
-element of my architecture.  Its primary purpose is to provide
-access to the data elements representing the network to clients
-which are primarily the nodes in the network.
 
 - Book keeping seem is a major task putting one of these together.
 
-- xor problem isn't converging.  error is just oscillating.  tried
-2,3,4 hidden nodes with similar results
 
 - serializing the network is important.
-- parameterized the network to accept variable numbers of input,
-hidden and output nodes.
 
-- architecture
-  - data table to hold weights and intermediate calculations
-  table doesn't do any operations on the data other than storing and
-  retrieving data
-
-  - nodes are just free functions
 
 - Need to make a plot of the decision boundary.
 
