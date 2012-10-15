@@ -12,7 +12,7 @@ This module is for creating test data for Assingment 2.
 
 import numpy as np
 
-def circle_data():
+def circle_data(n):
     """This function creates the data for the assignment
     with omega 1 bounded inside a cirlce of radius 1 and
     omega 2 outside a circle of radius 4."""
@@ -20,8 +20,9 @@ def circle_data():
     a = -.99
     points = []
     one = np.array(1.)
-    two = np.array(2.)
-    while len(points) < 20:
+    two = np.array(-1.)
+    stop = n/2
+    while len(points) < stop:
         p = (b-a) * np.random.random(2) + a
         d = np.sqrt(p[0]**2 + p[1]**2)
         if d < 1.0:
@@ -30,7 +31,7 @@ def circle_data():
 
     b = 10.0
     a = -9.99
-    while len(points) < 40:
+    while len(points) < n:
         p = (b-a) * np.random.random(2) + a
         d = np.sqrt(p[0]**2 + p[1]**2)
         if d > 4.0:
@@ -55,6 +56,14 @@ def read_data(fnm):
     fh = open(fnm, 'r')
     data = np.genfromtxt(fh, dtype=float, delimiter=',')
     return np.matrix(data)
+
+def convert_data(data):
+    """Changes the omega 2 tagged data elements to have a
+    tag of -1."""
+    for d in data:
+        if d[0,0] == 2:
+            d[0,0] = -1.
+    return data
 
 def test():
     data = read_data('homework_data.csv')
