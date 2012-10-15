@@ -66,7 +66,8 @@ class NeuralNet(object):
           The network error from the fwd pass
         """
         output_vec = self.fwd(input_pattern)
-        error = np.linalg.norm(output_vec - teacher)
+        diff = output_vec - teacher
+        error = np.sqrt(diff.T * diff)
         if (error > theta):
             self.dt.set_teacher(teacher)
             for y in range(1,self.output+1):
@@ -81,7 +82,7 @@ class NeuralNet(object):
             v_update = self.dt.get_v_vector() + delta_v_wts
             self.dt.update_hidden_to_output(w_update)
             self.dt.update_input_to_hidden(v_update)
-        return error
+        return error[0,0]
 
     def calc_delta_w(self):
         """Calculates the deltas for hidden to output weights.
@@ -128,3 +129,10 @@ class NeuralNet(object):
             self.dt.set_y_out(y, y_out)
 
         return self.dt.get_output()
+
+def nn_factory(data_table, squash, squash_prime, alpha):
+    """This function creates a NeuralNet object and installs
+    the provided data table object into the network.  The
+    new network is returned to the caller."""
+    mynet = NeuralNet((2,2,2), squash, squash_prime, alpha, data_table)
+    return mynet
