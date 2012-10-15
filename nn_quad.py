@@ -27,9 +27,9 @@ def main():
             d[0,0] = -1
 
     alpha = 0.5
-    theta = .0009
+    theta = .001
     iter_limit = 500000
-    mynet = nn.NeuralNet((2,3,1), sf.bipolar, sf.bipolar_prime, alpha)
+    mynet = nn.NeuralNet((2,2,1), sf.bipolar, sf.bipolar_prime, alpha)
     n = training_data.shape[0]
     total_count = 0
     k = -1
@@ -55,8 +55,21 @@ def main():
     plt.plot(plot_data[0:,0], plot_data[0:,1])
     plt.show()
 
+    counter = check_net(test_data, mynet.fwd)
+    print('Assigned', counter, 'patterns of', test_data.shape[0],'correctly.')
+
+
+
+def check_net(test_data, fwd):
     # Now, run the test data through the network and count correct
     # classifications.
+    counter = 0
+    for d in test_data:
+        expected = d[0,0]
+        actual = fwd(d[0,1:])
+        if np.sign(expected) == np.sign(actual):
+            counter += 1
+    return counter
 
 
 if __name__ == '__main__':
