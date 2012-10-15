@@ -49,11 +49,11 @@ the separable data set from Assignment 2.
 
 \section*{Neural Network Architecture}
 I had several goals in mind as I developed the architecture for my
-neural network.  First I wanted to keep it as simple as I could manage
+neural network.  First, I wanted to keep it as simple as I could manage
 to permit detailed analysis and testing of each component.  Second, I
 wanted to preserve flexibility by parameterizing key features of the
 network.  The path I chose toward these goals was to restrict the
-network to a three layer network, but allow an arbitrary number of
+network to three layers, but allow an arbitrary number of
 input, hidden and output nodes to be specified during network
 construction. The squashing function and its derivative are selected
 at construction as well.
@@ -76,8 +76,10 @@ perform calculations on network data.  The hidden and output nodes are
 not modeled directly.  The calculations performed by these nodes are
 encapsulated in the z\_node and y\_node modules as free functions.
 Squashing functions are implemented in a separate module as well,
-squash\_funcs.py.  Lastly are the executables that perform the training
-and analysis called for in the assignment, nn\_xor.py and nn\_quad.py.  Thes executables utilize the interface provided by DataTable and NeuralNet to train the network and analyze results.
+squash\_funcs.py.  Lastly are the executables that perform the
+training and analysis called for in the assignment, nn\_xor.py and
+nn\_quad.py.  Lastly, these executables utilize the interface provided
+by DataTable and NeuralNet to train the network and analyze results.
 
 Next, I will discuss each exercise.
 
@@ -88,7 +90,7 @@ on a two dimensional input vector.  I trained a 2,2,1 neural network
 patterns in the XOR truth table and observed several interesting
 properties related to training.
 
-I initially capped training iterations to 1000 iterations and it
+Initially I capped training iterations to 1000 iterations and it
 appeared the network was not converging.  A plot of iteration against
 error of this situation is in Figure~\ref{fig:xor-pre}.  I then
 increased the iteration limit and modified the logic to produce a plot
@@ -188,7 +190,7 @@ and~\ref{fig:large-quad-boundary} respectively.
 \begin{figure}
   \centering
   \includegraphics[scale=1.0]{images/large_quad_error.eps}
-  \caption{Training Error, $n=100$}
+  \caption{Training Error, $n=200$}
   \label{fig:large-quad-error}
 \end{figure}
 
@@ -214,7 +216,7 @@ isolation.
 It also taught me some of the difficulties involved with training a
 neural network.  I found that what appeared to be a convergence
 failure in the XOR case, was actually a temporary oscillation that
-damped out later.  In the case of the Assignment 2 data, I found
+dampened out later.  In the case of the Assignment 2 data, I found
 almost the opposite.  The network appeared to converge very rapidly on
 training data, but when I pushed test data through the network, the
 network performance was actually worse than guessing. The problem
@@ -222,6 +224,10 @@ turned out to be a bug not in the network code, but in my code for
 training the network on the Assignment 2 data.  I had forgotten to
 increment my pattern index and, as a result, I was training the
 network on a single sample.
+
+One of the most interesting aspects of neural network training
+I discovered is how dependent the decision boundary is on the training
+data set.  This is evident in the plots of the decision boundaries.
 
 Overall, I found this to be an interesting and challenging exercise.
 
