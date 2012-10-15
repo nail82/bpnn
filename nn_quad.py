@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 """
+Ted Satcher
+CS 640
+Fall 2012
+
+Assignment 3
+
+File: nn_quad.py
+
 This uses a neural network to classify the non-linear
 data points from assignment 2.
 """

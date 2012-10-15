@@ -1,5 +1,13 @@
 #!/usr/bin/env python2.7
 """
+Ted Satcher
+CS 640
+Fall 2012
+
+Assignment 3
+
+File: nn_xor.py
+
 This exercise sets up and trains the neural network
 to calculate xor on two inputs.
 """

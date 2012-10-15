@@ -3,7 +3,7 @@ Ted Satcher
 CS 640
 Fall 2012
 
-Assignment 2
+Assignment 3
 
 File: make_data.py
 

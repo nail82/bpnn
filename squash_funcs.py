@@ -1,4 +1,12 @@
 """
+Ted Satcher
+CS 640
+Fall 2012
+
+Assignment 3
+
+File: squash_funcs.py
+
 This module implements squashing functions
 and first derivatives for the squashing functions.
 """

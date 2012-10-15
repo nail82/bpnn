@@ -27,4 +27,3 @@ def calc_delta(node_id, data_table, fp):
     net_in = data_table.get_net_in_y(node_id)
     delta = (t-y) * fp(net_in)
     return delta
-

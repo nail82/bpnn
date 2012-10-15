@@ -18,7 +18,8 @@ import numpy as np
 
 class NeuralNet(object):
     """
-    This class contains the nodes of the network.
+    This class implements the training and forward pass
+    algorithms for the neural network.
     """
 
     def __init__(self, dimensions, squash, squash_prime,
