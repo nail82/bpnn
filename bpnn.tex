@@ -45,7 +45,7 @@
 The purpose of this assignment was to construct and train a back
 propagation neural network and to exercise the network on two distinct
 data sets.  The first data set is the XOR data set and the second is
-the quadratically separable data from assignment two.
+the separable data set from Assignment 2.
 
 \section*{Neural Network Architecture}
 I had several goals in mind as I developed the architecture for my
@@ -72,7 +72,7 @@ forward and backward pass on the network to update the network
 weights.
 
 The are three additional modules consisting of free functions that
-peform calculations on network data.  The hidden and output nodes are
+perform calculations on network data.  The hidden and output nodes are
 not modeled directly.  The calculations performed by these nodes are
 encapsulated in the z\_node and y\_node modules as free functions.
 Squashing functions are implemented in a separate module as well,
@@ -83,26 +83,30 @@ Next, I will discuss each exercise.
 
 \section*{XOR Problem}
 The XOR problem called for training the network to perform XOR logic
-on a two dimensional input vector.  I trained the network using only
-the four patterns in the XOR truth table and observed several interesting properties related to training.
+on a two dimensional input vector.  I trained a 2,2,1 neural network
+(two input, two hidden and one output node) using only the four
+patterns in the XOR truth table and observed several interesting
+properties related to training.
 
 I initially capped training iterations to 1000 iterations and it
 appeared the network was not converging.  A plot of iteration against
 error of this situation is in Figure~\ref{fig:xor-pre}.  I then
 increased the iteration limit and modified the logic to produce a plot
 after each training session.  After several incremental changes to the
-iteration limit, the error plot began to look like th plot in
+iteration limit, the error plot began to look like the plot in
 Figure~\ref{fig:xor-converging}.  This plot suggested to me that the
 network was converging.  I increased the iteration limit further and
 the network did converge as shown in Figure~\ref{fig:xor-converged}.
 
 The pattern of convergence has a consistent pattern.  The error will
-oscillate for several thousan iterations until a break point is
+oscillate for several thousand iterations until a break point is
 reached. After that point, the error falls off rapidly. It appears
 that an arbitrarily small error can be achieved given enough time.
 
 After training, applying inputs to the network resulted in the output
-values listed in Table~\ref{table:xor-out} and the XOR decision boundary is plotted in Figure~\ref{fig:xor-boundary}.  The dark areas in the boundary plot map to 1.
+values listed in Table~\ref{table:xor-out} and the XOR decision
+boundary is plotted in Figure~\ref{fig:xor-boundary}.  The dark areas
+in the boundary plot map to 1.
 
 \begin{table}
   \begin{center}
@@ -144,26 +148,81 @@ values listed in Table~\ref{table:xor-out} and the XOR decision boundary is plot
 \begin{figure}
   \centering
   \includegraphics[scale=1.0]{images/xor_boundary.eps}
-  \caption{XOR Decsion Boundary}
+  \caption{XOR Decision Boundary}
   \label{fig:xor-boundary}
 \end{figure}
 
 \section*{Assignment 2 Data}
+The next segment of the neural net assignment was to categorize the
+data from Assignment 2.  This data has a collection of points inside
+the unit circle centered at the origin and another set of points
+outside a circle of radius four.
 
-\section*{Observations and Summary}
+For my first training attempt, I generated a training data set the
+same size, $n=40$, as the test data set from Assignment 2.  The
+resulting decision boundary with the test data overlaid is shown in
+Figure~\ref{fig:small-quad-boundary} and the error plot for this training
+session is displayed in Figure~\ref{fig:small-quad-error}
+
+Next, I increased the number of point in the training set to reduce
+the sparseness of the data and retrained the network.  The resulting
+error and boundary plots are in Figures~\ref{fig:large-quad-error}
+and~\ref{fig:large-quad-boundary} respectively.
 
 
-\section*{NOTES}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{images/small_quad_error.eps}
+  \caption{Training Error, $n=40$}
+  \label{fig:small-quad-error}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{images/small_quad_boundary.eps}
+  \caption{Decision Boundary, $n=40$}
+  \label{fig:small-quad-boundary}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{images/large_quad_error.eps}
+  \caption{Training Error, $n=100$}
+  \label{fig:large-quad-error}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{images/large_quad_boundary.eps}
+  \caption{Decision Boundary, $n=200$}
+  \label{fig:large-quad-boundary}
+\end{figure}
 
 
-- Book keeping seem is a major task putting one of these together.
 
+\section*{Observations and Conclusion}
+This assignment taught me that neural network implementation is non-
+trivial and book keeping is a major activity during the coding
+process.  It was apparent to me from the outset of coding that I
+needed to carefully validate the behavior of each implemented part of
+the network against expected behavior before moving to code the next
+portion. I also found it important to keep the components of the
+network as loosely coupled as possible to allow testing them in
+isolation.
 
-- serializing the network is important.
+It also taught me some of the difficulties involved with training a
+neural network.  I found that what appeared to be a convergence
+failure in the XOR case, was actually a temporary oscillation that
+damped out later.  In the case of the Assignment 2 data, I found
+almost the opposite.  The network appeared to converge very rapidly on
+training data, but when I pushed test data through the network, the
+network performance was actually worse than guessing. The problem
+turned out to be a bug not in the network code, but in my code for
+training the network on the Assignment 2 data.  I had forgotten to
+increment my pattern index and, as a result, I was training the
+network on a single sample.
 
-
-- Need to make a plot of the decision boundary.
-
-
+Overall, I found this to be an interesting and challenging exercise.
 
 \end{document}
