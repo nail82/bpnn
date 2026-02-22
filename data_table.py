@@ -228,7 +228,7 @@ class DataTable(object):
         """Returns the hidden to output weights associated
         with a delta z calculation."""
         assert(0 < z <= self.hidden)
-        step = self.w_wts.shape[0] / self.output
+        step = int(self.w_wts.shape[0] / self.output)
         return self.w_wts[z::step,0]
 
     def prettyprint(self):
@@ -329,4 +329,3 @@ class DataTable(object):
             msglines.append(msg)
         print('\n'.join(msglines))
         print()
-
